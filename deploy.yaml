@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: php-scale-ewies
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-scale-ewies-app
+  template:
+    metadata:
+      labels:
+        app: php-scale-ewies-app
+    spec:
+      containers:
+        - name: php-scale-ewies
+          image: php:7.4-cli
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: php-scale-ewies-svc
+spec:
+ports:
+  - name: http-3001
+    port: 80
+    protocol: TCP
+    targetPort: 80
+selector:
+  app: php-scale-ewies-app
